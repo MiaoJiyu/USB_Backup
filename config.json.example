@@ -1,0 +1,15 @@
+{
+  "backup_root": "D:\\USB_Backup",
+  "sftp_host": "your_server_host",
+  "sftp_port": your_server_port,
+  "sftp_username": "backup_user",
+  "sftp_password": "your_password_here",
+  "sftp_remote_base": "your_remote_base_path",
+  "max_backup_size_gb": 5,
+  "enable_cloud_sync": true,
+  "self_heal_enabled": true,
+  "guardian_enabled": true,
+  "log_level": "INFO",
+  "protected_pids": [],
+  "driver_auto_load": true
+}

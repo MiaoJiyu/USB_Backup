@@ -1,0 +1,64 @@
+; ============================================================
+; ProcProtect.inf - Ring0 进程保护驱动安装信息文件
+;
+; 用途: Windows WDM 驱动安装描述符
+; 目标平台: x64 (仅支持 64 位 Windows)
+; 类别: System (内核模式驱动)
+; ============================================================
+
+[Version]
+Signature="$Windows NT$"
+Class=System
+ClassGuid={4D36E97D-E325-11CE-BFC1-08002BE10318}
+Provider=%ManufacturerName%
+CatalogFile=ProcProtect.cat
+DriverVer=01/01/2026,1.0.0.0
+DriverPackageDisplayName=USB Backup Process Protect Driver
+PnpLockdown=1
+
+[Manufacturer]
+%ManufacturerName%=Standard,NTamd64
+
+[Standard.NTamd64]
+; 驱动设备安装节点 - 通过服务安装而非即插即用
+%DeviceDesc%=ProcProtect_Install, Root\ProcProtect ; 虚拟根设备
+
+[ProcProtect_Install]
+; 驱动文件拷贝
+CopyFiles=Drivers_Dir
+
+[Drivers_Dir]
+ProcProtect.sys
+
+; ==================== 服务安装配置 ====================
+[ProcProtect_Install.Services]
+AddService = ProcProtect,%SPSVCINST_ASSOCSERVICE%,ProcProtect_Service_Install
+
+[ProcProtect_Service_Install]
+DisplayName    = %ServiceName%
+Description    = %ServiceDesc%
+ServiceType    = 1               ; SERVICE_KERNEL_DRIVER
+StartType      = 3               ; SERVICE_DEMAND_START (手动启动)
+ErrorControl  = 1               ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %12%\ProcProtect.sys  ; %12% = drivers 目录
+LoadOrderGroup = "System Bus Extender"
+
+; ==================== 磁盘空间需求 ====================
+[DestinationDirs]
+DefaultDestDir=12                ; System32\drivers
+Drivers_Dir=12
+
+; ==================== 源媒体描述 ====================
+[SourceDisksNames]
+1=%DiskName%,,,""
+[SourceDisksFiles]
+ProcProtect.sys=1
+
+; ==================== 字符串资源 ====================
+[Strings]
+ManufacturerName="MiaoJiyu Tech"
+DeviceDesc="Process Protection Driver for USB Backup Service"
+ServiceName="ProcProtect"
+ServiceDesc="Ring0 kernel driver that protects USB backup service processes from termination. Uses ObRegisterCallbacks to strip dangerous access rights."
+DiskName="ProcProtect Installation Disk"
+SPSVCINST_ASSOCSERVICE=0x2
