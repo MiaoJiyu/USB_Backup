@@ -1,0 +1,4 @@
+pywin32>=306
+paramiko>=3.0.0
+cryptography>=41.0.0
+pyinstaller>=5.13.0

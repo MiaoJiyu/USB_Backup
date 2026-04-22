@@ -1,0 +1,79 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.vs/
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+*.egg
+*.whl
+.eggs/
+
+# PyInstaller
+*.spec.cache/
+*.Manifest
+*.baseline
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+*.log
+logs/
+*.log.*
+
+# Local config (NEVER commit real credentials)
+config.json
+
+# Backup data
+D:/
+E:/
+USB_Backup/
+*_BACKUP/
+*.bak
+
+# Cloud/staging artifacts
+venv/
+.venv/
+env/
+.env
+.env.*
+
+# Windows build artifacts
+*.obj
+*.pdb
+*.exp
+*.lib
+*.map
+*.idb
+*.ilk
+*.res
+*.aps
+*.iobj
+*.ipdb
+*.LastBuildRule*
+*.VC.db
+*.VC.VC.opendb
+*.pgs
+WdkBinaries/
+WDKBuilds/
+
+# Test coverage
+htmlcov/
+.coverage
+.coverage.*
+*.cover
+
+# git
+.git/
+.gitattributes
