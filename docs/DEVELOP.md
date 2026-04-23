@@ -137,9 +137,9 @@ ObRegisterCallbacks PreCallback:
    ```cmd
    cd C:\Users\admin\Documents\USB_Backup\driver
    ```
-3. **使用 MSBuild 编译**（WDK 10+ 标准方式）：
+3. **使用 MSBuild 编译**：
    ```cmd
-   msbuild /p:Configuration=Release /p:Platform=x64
+   msbuild ProcProtect.vcxproj /p:Configuration=Release /p:Platform=x64
    ```
    - 成功输出：`driver\x64\Release\ProcProtect.sys`
 

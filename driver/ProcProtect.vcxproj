@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- ================================================================
+       ProcProtect.vcxproj — WDK 10/11 内核驱动 MSBuild 项目文件
+       用法: msbuild ProcProtect.vcxproj /p:Configuration=Release /p:Platform=x64
+       ================================================================ -->
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{8A1F4E7D-3C5B-4F6A-9C2D-1E0B3A5F7C8B}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>ProcProtect</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+
+  <!-- 加载 VC 默认属性 (定义在 Microsoft.Cpp.Default.props) -->
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+
+  <!-- ================================================================
+       驱动专用配置
+       ================================================================ -->
+  <PropertyGroup Label="Configuration">
+    <ConfigurationType>Driver</ConfigurationType>
+    <PlatformToolset>WindowsKernelModeDriver10.0</PlatformToolset>
+    <DriverType>WDM</DriverType>
+    <TargetVersion>Windows7</TargetVersion>
+  </PropertyGroup>
+
+  <!-- ================================================================
+       加载 VC 属性
+       ================================================================ -->
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+
+  <!-- ================================================================
+       WDK 专用属性 (WDK 安装目录下的 targets)
+       WDKContentRoot 由 WDK VS 扩展设置，或手动 set WDKContentRoot=...
+       ================================================================ -->
+  <PropertyGroup>
+    <!-- 自动检测 WDK 根目录 (常见安装路径) -->
+    <WDKContentRoot Condition="'$(WDKContentRoot)'==''">$(Registry:HKLM\SOFTWARE\Microsoft\Windows Kits\Installed Roots, KitsRoot10@reg_sz)</WDKContentRoot>
+    <WDKContentRoot Condition="Exists('C:\Program Files (x86)\Windows Kits\10')">C:\Program Files (x86)\Windows Kits\10</WDKContentRoot>
+    <WDKContentRoot Condition="Exists('C:\Program Files\Windows Kits\10')">C:\Program Files\Windows Kits\10</WDKContentRoot>
+  </PropertyGroup>
+
+  <!-- WDK targets — 尝试多个已知路径以兼容不同 WDK 版本 -->
+  <PropertyGroup>
+    <_WDKProps>$(WDKContentRoot)\build\WS2012\WDKBuild.props</_WDKProps>
+    <_WDKProps Condition="Exists('$(WDKContentRoot)\build\Win8.1\WDKBuild.props')">$(WDKContentRoot)\build\Win8.1\WDKBuild.props</_WDKProps>
+    <_WDKProps Condition="Exists('$(WDKContentRoot)\build\Win10\WDKBuild.props')">$(WDKContentRoot)\build\Win10\WDKBuild.props</_WDKProps>
+    <_WDKTargets>$(WDKContentRoot)\build\WS2012\WDKBuild.targets</_WDKTargets>
+    <_WDKTargets Condition="Exists('$(WDKContentRoot)\build\Win8.1\WDKBuild.targets')">$(WDKContentRoot)\build\Win8.1\WDKBuild.targets</_WDKTargets>
+    <_WDKTargets Condition="Exists('$(WDKContentRoot)\build\Win10\WDKBuild.targets')">$(WDKContentRoot)\build\Win10\WDKBuild.targets</_WDKTargets>
+  </PropertyGroup>
+
+  <!-- 加载 WDK 属性 (如果存在) -->
+  <Import Project="$(_WDKProps)" Condition="Exists('$(_WDKProps)')" />
+
+  <!-- ================================================================
+       Release 配置属性
+       ================================================================ -->
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <TargetName>ProcProtect</TargetName>
+  </PropertyGroup>
+
+  <!-- ================================================================
+       C 源文件
+       ================================================================ -->
+  <ItemGroup>
+    <ClCompile Include="ProcProtect.c">
+      <WarningLevel>Level3</WarningLevel>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <AdditionalOptions>/kernel %(AdditionalOptions)</AdditionalOptions>
+      <ObjectFileName>$(IntDir)%(Filename).obj</ObjectFileName>
+    </ClCompile>
+  </ItemGroup>
+
+  <!-- ================================================================
+       头文件
+       ================================================================ -->
+  <ItemGroup>
+    <ClInclude Include="ProcProtect.h" />
+  </ItemGroup>
+
+  <!-- ================================================================
+       INF 安装信息文件
+       ================================================================ -->
+  <ItemGroup>
+    <Inf Include="ProcProtect.inf">
+      <GenerateCatalog>true</GenerateCatalog>
+    </Inf>
+  </ItemGroup>
+
+  <!-- ================================================================
+       加载 WDK targets (如果存在)，然后加载标准 VC targets
+       ================================================================ -->
+  <Import Project="$(_WDKTargets)" Condition="Exists('$(_WDKTargets)')" />
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+
+  <!-- ================================================================
+       后置处理: 复制输出到 driver\ 根目录
+       ================================================================ -->
+  <Target Name="AfterBuild" Condition="'$(Configuration)'=='Release'">
+    <Copy SourceFiles="$(OutDir)ProcProtect.sys"
+          DestinationFiles="$(ProjectDir)ProcProtect.sys"
+          SkipUnchangedFiles="true" />
+    <Message Text="驱动已复制到: $(ProjectDir)ProcProtect.sys" Importance="high" />
+  </Target>
+</Project>
