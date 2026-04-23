@@ -245,8 +245,7 @@ class DriverLoader:
         """
         安装驱动服务
 
-        参数:
-            copy_driver: 是否将驱动文件复制到 System32\drivers 目录
+            copy_driver: 是否将驱动文件复制到 System32/drivers 目录
 
         返回:
             True=成功 False=失败
@@ -420,7 +419,7 @@ class DriverClient:
         初始化驱动客户端
 
         参数:
-            device_path: 驱动设备路径, 默认 \\.\ProcProtect
+            device_path: 驱动设备路径, 默认 \\Device\\ProcProtect
         """
         self.device_path = device_path or self.DEVICE_PATH
         self._device_handle = None

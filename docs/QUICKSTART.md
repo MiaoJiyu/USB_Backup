@@ -47,7 +47,7 @@ pip install pywin32 paramiko cryptography pyinstaller
 
 > 驱动用于防止备份进程被恶意终止。**必须管理员权限**。
 
-右键 `scripts\install_driver.bat` → **以管理员身份运行**
+右键 `install_driver.bat` → **以管理员身份运行**
 
 看到 `ProcProtect 服务已启动` 即成功。
 
@@ -119,7 +119,7 @@ D:\USB_Backup\
 | 查看日志 | `type %LOCALAPPDATA%\USB_Backup\logs\usb_backup.log` |
 | 停止服务 | 任务管理器 → 结束 `USB_Backup.exe` |
 | 查看驱动状态 | `sc query ProcProtect` |
-| 卸载驱动 | `scripts\install_driver.bat uninstall` |
+| 卸载驱动 | `install_driver.bat uninstall` |
 | 删除计划任务 | `schtasks /delete /tn "USB Backup Service" /f` |
 | 强制重新备份 | 删除 `D:\USB_Backup` 下对应目录，下次插入自动重新备份 |
 

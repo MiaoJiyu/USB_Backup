@@ -132,25 +132,25 @@ ObRegisterCallbacks PreCallback:
 
 ### 4.2 编译步骤
 
-1. 打开 **x64 Native Tools Command Prompt for VS 2022**
-2. 设置 WDK 路径（根据实际安装目录调整）：
+1. 打开 **x64 Native Tools Command Prompt for VS 2026**（或 VS 2022）
+2. 进入驱动目录：
    ```cmd
-   set WDK contentRoot=C:\Program Files (x86)\Windows Kits\10
+   cd C:\Users\admin\Documents\USB_Backup\driver
    ```
-3. 进入驱动目录并编译：
+3. **使用 MSBuild 编译**（WDK 10+ 标准方式）：
    ```cmd
-   cd driver
-   build -gzw
+   msbuild /p:Configuration=Release /p:Platform=x64
    ```
-4. 输出：`driver\objfre_win7_amd64\amd64\ProcProtect.sys`
+   - 成功输出：`driver\x64\Release\ProcProtect.sys`
 
-> 如使用 EWDK（独立编译环境），参考 Microsoft 官方文档。
+> **常见错误**：`'build' 不是内部或外部命令` → 这是 WDK 7.x 的旧命令，现代 WDK 必须用 MSBuild。如果 msbuild 找不到，请确保从 "x64 Native Tools Command Prompt for VS" 启动，并已安装 WDK VS 集成扩展（WDK 安装时勾选 "Enable driver development..."）。
+
 
 ### 4.3 签名驱动
 
 ```cmd
 :: 方式 A: 使用项目脚本（开发/测试）
-scripts\sign_driver.bat
+sign_driver.bat
 
 :: 方式 B: 手动签名
 makecert -r -h 0 -n "CN=ProcProtectTest" -e 12/31/2030 -sv ProcProtectTest.pvk ProcProtectTest.cer
@@ -165,7 +165,7 @@ signtool sign /f ProcProtectTest.pfx /p TestPass123 /fd SHA256 ProcProtect.sys
 bcdedit /set testsigning on
 
 # 2. 安装驱动
-scripts\install_driver.bat
+install_driver.bat
 
 # 3. 验证驱动加载
 sc query ProcProtect

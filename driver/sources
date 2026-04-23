@@ -1,0 +1,38 @@
+# ============================================================
+# ProcProtect Driver Sources File
+# WDK 10/11 MSBuild 构建配置
+# ============================================================
+
+# 目标平台
+TARGETNAME=ProcProtect
+TARGETTYPE=DRIVER
+
+# 源文件
+SOURCES=ProcProtect.c
+
+# 头文件搜索路径
+INCLUDES=$(INCLUDE);$(DDK_INC_PATH)
+
+# 预处理器定义
+PREPROCESSOR_FLAGS=/D"_AMD64_" /D"_WIN64" /D"AMD64" /D"WIN64" /D"_X86_64" /D"_AMD64_" /D"WIN32" /D"_WINDOWS" /D"UNICODE" /D"_UNICODE" /D"NT" /D"_NT_TARGET_MIN_WINXP=0x0501" /D"_WIN32_WINNT=0x0601" /D"NTDDI_VERSION=0x06010000" /D"_WDBCONTEXT_KERNEL"
+
+# C 编译选项
+C_FLAGS=$(C_FLAGS) /Zp8 /GS- /Gy /W4 /WX- /Od /Gm- /fp:fast /Z7 /nologo
+C_FLAGS=$(C_FLAGS) /D_M_X64 /D_AMD64_ /D_WIN64
+C_FLAGS=$(C_FLAGS) /wd4200 /wd4214 /wd4324 /wd4255 /wd4668 /wd4840
+C_FLAGS=$(C_FLAGS) /analyze
+C_FLAGS=$(C_FLAGS) /D_ANALYSIS
+
+# 链接选项
+LINKER_FLAGS=/INTEGRITYCHECK /SUBSYSTEM:NATIVE,6.01 /entry:GsDriverEntry@8
+LINKER_FLAGS=$(LINKER_FLAGS) /NODEFAULTLIB /NOLOGO /LTCG:OFF /IGNORE:4210,4037,4047,4090,4214
+
+# 忽略默认库
+UMTYPE=DRIVER
+UMFILE=DRIVER
+
+# 驱动类型
+DRIVER_TYPE=WDM
+
+# INF 文件 (可选，用于签名)
+INF_FILE=ProcProtect.inf

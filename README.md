@@ -82,7 +82,7 @@ pip install -r requirements.txt
 
 ```powershell
 cd driver
-build -gzw
+msbuild /p:Configuration=Release /p:Platform=x64
 ```
 
 4. 签名驱动:
@@ -92,7 +92,7 @@ build -gzw
 bcdedit /set testsigning on
 
 # 运行签名脚本
-scripts\sign_driver.bat
+sign_driver.bat
 ```
 
 ### 3.4 打包 EXE
@@ -131,7 +131,7 @@ pyinstaller usb_backup.spec
 
 **方式 A: 图形化 (推荐普通用户)**
 
-1. 右键 `scripts\install_driver.bat` → **以管理员身份运行**
+1. 右键 `install_driver.bat` → **以管理员身份运行**
 2. 驱动将复制到 `C:\Windows\System32\drivers\ProcProtect.sys`
 3. SCM 服务 `ProcProtect` 将被创建并启动
 
@@ -139,7 +139,7 @@ pyinstaller usb_backup.spec
 
 ```powershell
 cd /d %~dp0
-scripts\install_driver.bat
+install_driver.bat
 ```
 
 #### 步骤 3: 创建计划任务 (开机自启)
@@ -244,7 +244,7 @@ rd /s /q "%LOCALAPPDATA%\USB_Backup"
 
 **解决方案**:
 1. 启用测试签名: `bcdedit /set testsigning on`（需重启）
-2. 使用 `scripts\sign_driver.bat` 对驱动进行自签名
+2. 使用 `sign_driver.bat` 对驱动进行自签名
 3. 或使用正式代码签名证书进行签名
 
 ### Q2: "DeviceIoControl failed" 错误
